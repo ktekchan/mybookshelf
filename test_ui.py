@@ -124,6 +124,92 @@ class TestCSSIntegrity(unittest.TestCase):
         )
 
 
+class TestFlipCSS(unittest.TestCase):
+    """Validate overlay-based page-curl CSS rules exist and are safe."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.css = CSS_PATH.read_text()
+
+    def test_book_overlay_rule_exists(self):
+        """.book-overlay must exist with fixed positioning."""
+        self.assertRegex(
+            self.css,
+            r"\.book-overlay\s*\{[^}]*position:\s*fixed",
+            ".book-overlay must use position: fixed",
+        )
+
+    def test_overlay_card_has_position_relative(self):
+        """.overlay-card must exist with position: relative."""
+        self.assertRegex(
+            self.css,
+            r"\.overlay-card\s*\{[^}]*position:\s*relative",
+            ".overlay-card must have position: relative",
+        )
+
+    def test_page_front_has_z_index(self):
+        """.page-front must exist with z-index."""
+        block = re.search(r"\.page-front\s*\{([^}]*)\}", self.css)
+        self.assertIsNotNone(block, ".page-front rule must exist")
+        self.assertIn("z-index", block.group(1))
+
+    def test_page_back_has_position_absolute(self):
+        """.page-back must exist with position: absolute."""
+        self.assertRegex(
+            self.css,
+            r"\.page-back\s*\{[^}]*position:\s*absolute",
+            ".page-back must have position: absolute",
+        )
+
+    def test_page_fold_rule_exists(self):
+        """.page-fold rule must exist."""
+        block = re.search(r"\.page-fold\s*\{([^}]*)\}", self.css)
+        self.assertIsNotNone(block, ".page-fold rule must exist")
+
+    def test_flippable_cursor(self):
+        """.book-card.flippable must set cursor: pointer."""
+        self.assertRegex(
+            self.css,
+            r"\.book-card\.flippable\s*\{[^}]*cursor:\s*pointer",
+            ".book-card.flippable must use cursor: pointer",
+        )
+
+
+class TestFlipJS(unittest.TestCase):
+    """Validate JS creates overlay-based page-curl for cards with notes."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.js = JS_PATH.read_text()
+
+    def test_js_has_flippable_class(self):
+        """JS must add 'flippable' class for cards with notes."""
+        self.assertIn("flippable", self.js)
+
+    def test_js_has_openBook_function(self):
+        """JS must have openBook function."""
+        self.assertIn("openBook", self.js)
+
+    def test_js_has_closeBook_function(self):
+        """JS must have closeBook function."""
+        self.assertIn("closeBook", self.js)
+
+    def test_js_creates_book_overlay(self):
+        """JS must create book-overlay element."""
+        self.assertIn("book-overlay", self.js)
+
+    def test_js_creates_page_curl_structure(self):
+        """JS must create page-front, page-back, page-fold in overlay."""
+        self.assertIn("page-front", self.js)
+        self.assertIn("page-back", self.js)
+        self.assertIn("page-fold", self.js)
+
+    def test_js_has_animate_page_turn(self):
+        """JS must have animatePageTurn using requestAnimationFrame."""
+        self.assertIn("animatePageTurn", self.js)
+        self.assertIn("requestAnimationFrame", self.js)
+
+
 class TestJSIntegrity(unittest.TestCase):
     """Validate JS doesn't set problematic CSS properties."""
 

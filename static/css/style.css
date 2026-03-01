@@ -109,6 +109,112 @@ main {
     line-height: 1.3;
 }
 
+/* === Card Flip === */
+.book-card.flippable {
+    cursor: pointer;
+}
+
+/* === Book Overlay === */
+.book-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.book-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.overlay-card {
+    width: 90vw;
+    max-width: 400px;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 16px 64px rgba(0, 0, 0, 0.3);
+}
+
+.page-front {
+    position: relative;
+    z-index: 2;
+    background: #fff;
+    padding: 10px;
+}
+
+.page-back {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: #FAF7F2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 32px 24px;
+    overflow-y: auto;
+}
+
+.page-fold {
+    position: absolute;
+    top: 0;
+    width: 40px;
+    height: 100%;
+    z-index: 3;
+    background: linear-gradient(to left,
+        transparent,
+        rgba(0, 0, 0, 0.08) 40%,
+        rgba(0, 0, 0, 0.15) 50%,
+        rgba(255, 255, 255, 0.1) 60%,
+        rgba(255, 255, 255, 0.3)
+    );
+    pointer-events: none;
+    opacity: 0;
+}
+
+.fold-shadow {
+    position: absolute;
+    top: 0;
+    width: 60px;
+    height: 100%;
+    z-index: 1;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.15), transparent);
+    pointer-events: none;
+    opacity: 0;
+}
+
+.back-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #999;
+    margin-bottom: 12px;
+}
+
+.back-note {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: #4a4a4a;
+    text-align: center;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.back-hint {
+    font-size: 0.7rem;
+    color: #bbb;
+    margin-top: 16px;
+}
+
 /* === Empty State === */
 .empty-state {
     text-align: center;
