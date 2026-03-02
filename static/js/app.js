@@ -42,21 +42,24 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.className = "book-overlay";
     overlay.innerHTML = `
       <div class="overlay-card">
+        <div class="page-recto"></div>
         <div class="page-back">
           <p class="back-title">${book.title}</p>
           <blockquote class="back-note">"${book.note}"</blockquote>
           <p class="back-hint">click to close</p>
         </div>
         <div class="page-front">
-          <img src="/photos/${book.photo_filename}" alt="${book.title}">
-          <div class="card-body">
-            <h3 class="book-title">${book.title}</h3>
-            <p class="book-author">by ${book.author}</p>
-            <span class="book-date">${formatDate(book.date_finished)}</span>
+          <div class="front-face">
+            <img src="/photos/${book.photo_filename}" alt="${book.title}">
+            <div class="card-body">
+              <h3 class="book-title">${book.title}</h3>
+              <p class="book-author">by ${book.author}</p>
+              <span class="book-date">${formatDate(book.date_finished)}</span>
+            </div>
           </div>
+          <div class="front-back"></div>
         </div>
         <div class="page-fold"></div>
-        <div class="fold-shadow"></div>
       </div>
     `;
     document.body.appendChild(overlay);
@@ -83,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function animatePageTurn(card, direction, onComplete) {
     const front = card.querySelector(".page-front");
     const fold = card.querySelector(".page-fold");
-    const shadow = card.querySelector(".fold-shadow");
     const duration = 800;
     const start = performance.now();
 
@@ -97,30 +99,20 @@ document.addEventListener("DOMContentLoaded", () => {
       const eased = easeInOut(rawProgress);
       const progress = direction === "open" ? eased : 1 - eased;
 
-      const topX = Math.max(0, Math.min(100, 100 - progress * 103));
-      const bottomX = Math.max(0, Math.min(100, 100 - progress * 97));
-      front.style.clipPath =
-        `polygon(0 0, ${topX}% 0, ${bottomX}% 100%, 0 100%)`;
+      // Rotate front page around spine (left edge of page-front = center of card)
+      const angle = progress * 180;
+      front.style.transform = `rotateY(${angle}deg)`;
 
-      const foldX = Math.min(topX, bottomX);
-      fold.style.left = foldX + "%";
-      fold.style.opacity = progress > 0.05 && progress < 0.95 ? 1 : 0;
-
-      shadow.style.left = Math.max(0, foldX - 5) + "%";
-      shadow.style.opacity = progress > 0.05 && progress < 0.95 ? 1 : 0;
+      // Fold shadow deepens when page is perpendicular (at 90deg)
+      const foldIntensity = Math.sin(progress * Math.PI);
+      fold.style.opacity = 0.3 + foldIntensity * 0.7;
 
       if (rawProgress < 1) {
         requestAnimationFrame(tick);
       } else {
-        if (direction === "open") {
-          front.style.clipPath = "polygon(0 0, 0 0, 0 100%, 0 100%)";
-          fold.style.opacity = 0;
-          shadow.style.opacity = 0;
-        } else {
-          front.style.clipPath = "";
-          fold.style.opacity = 0;
-          shadow.style.opacity = 0;
-        }
+        front.style.transform = direction === "open"
+          ? "rotateY(180deg)" : "";
+        fold.style.opacity = "";
         if (onComplete) onComplete();
       }
     }

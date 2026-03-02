@@ -125,7 +125,7 @@ class TestCSSIntegrity(unittest.TestCase):
 
 
 class TestFlipCSS(unittest.TestCase):
-    """Validate overlay-based page-curl CSS rules exist and are safe."""
+    """Validate overlay-based book-flip CSS rules exist and are safe."""
 
     @classmethod
     def setUpClass(cls):
@@ -139,12 +139,12 @@ class TestFlipCSS(unittest.TestCase):
             ".book-overlay must use position: fixed",
         )
 
-    def test_overlay_card_has_position_relative(self):
-        """.overlay-card must exist with position: relative."""
+    def test_overlay_card_has_perspective(self):
+        """.overlay-card must exist with perspective for 3D page turn."""
         self.assertRegex(
             self.css,
-            r"\.overlay-card\s*\{[^}]*position:\s*relative",
-            ".overlay-card must have position: relative",
+            r"\.overlay-card\s*\{[^}]*perspective:",
+            ".overlay-card must have perspective",
         )
 
     def test_page_front_has_z_index(self):
@@ -153,13 +153,10 @@ class TestFlipCSS(unittest.TestCase):
         self.assertIsNotNone(block, ".page-front rule must exist")
         self.assertIn("z-index", block.group(1))
 
-    def test_page_back_has_position_absolute(self):
-        """.page-back must exist with position: absolute."""
-        self.assertRegex(
-            self.css,
-            r"\.page-back\s*\{[^}]*position:\s*absolute",
-            ".page-back must have position: absolute",
-        )
+    def test_page_back_exists(self):
+        """.page-back rule must exist."""
+        block = re.search(r"\.page-back\s*\{([^}]*)\}", self.css)
+        self.assertIsNotNone(block, ".page-back rule must exist")
 
     def test_page_fold_rule_exists(self):
         """.page-fold rule must exist."""
@@ -176,7 +173,7 @@ class TestFlipCSS(unittest.TestCase):
 
 
 class TestFlipJS(unittest.TestCase):
-    """Validate JS creates overlay-based page-curl for cards with notes."""
+    """Validate JS creates overlay-based book-flip for cards with notes."""
 
     @classmethod
     def setUpClass(cls):
@@ -198,10 +195,12 @@ class TestFlipJS(unittest.TestCase):
         """JS must create book-overlay element."""
         self.assertIn("book-overlay", self.js)
 
-    def test_js_creates_page_curl_structure(self):
-        """JS must create page-front, page-back, page-fold in overlay."""
+    def test_js_creates_book_spread_structure(self):
+        """JS must create two-panel book structure with front/back faces."""
         self.assertIn("page-front", self.js)
         self.assertIn("page-back", self.js)
+        self.assertIn("front-face", self.js)
+        self.assertIn("front-back", self.js)
         self.assertIn("page-fold", self.js)
 
     def test_js_has_animate_page_turn(self):

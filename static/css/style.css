@@ -134,34 +134,25 @@ main {
 }
 
 .overlay-card {
+    display: flex;
     width: 90vw;
-    max-width: 600px;
+    max-width: 1000px;
+    min-height: 70vh;
     max-height: 90vh;
     position: relative;
-    overflow: hidden;
     background: #fff;
     box-shadow: 0 16px 64px rgba(0, 0, 0, 0.3);
+    perspective: 1500px;
 }
 
-.page-front {
-    position: relative;
-    z-index: 2;
-    background: #fff;
-    padding: 10px;
-    max-height: 90vh;
-    overflow: hidden;
-}
-
-.page-front img {
-    width: 100%;
-    display: block;
-    object-fit: cover;
+.page-recto {
+    width: 50%;
+    min-height: 70vh;
+    background: linear-gradient(to right, #f0ece4, #f5f1ea 30%, #f2eee6);
 }
 
 .page-back {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
+    width: 50%;
     background: #FAF7F2;
     display: flex;
     flex-direction: column;
@@ -171,32 +162,62 @@ main {
     overflow-y: auto;
 }
 
+.page-front {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    z-index: 2;
+    transform-style: preserve-3d;
+    transform-origin: left center;
+}
+
+.front-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    background: #fff;
+    padding: 10px;
+    overflow: hidden;
+}
+
+.front-face img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.front-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+    background: linear-gradient(to left,
+        #ddd8d0,
+        #e8e4dc 20%,
+        #f0ece4 50%,
+        #e8e4dc 80%,
+        #ddd8d0
+    );
+}
+
 .page-fold {
     position: absolute;
     top: 0;
-    width: 40px;
+    left: 50%;
+    width: 20px;
     height: 100%;
     z-index: 3;
-    background: linear-gradient(to left,
-        transparent,
-        rgba(0, 0, 0, 0.08) 40%,
-        rgba(0, 0, 0, 0.15) 50%,
-        rgba(255, 255, 255, 0.1) 60%,
-        rgba(255, 255, 255, 0.3)
+    transform: translateX(-50%);
+    background: linear-gradient(to right,
+        rgba(0, 0, 0, 0.08),
+        rgba(0, 0, 0, 0.02) 30%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.02) 70%,
+        rgba(0, 0, 0, 0.08)
     );
     pointer-events: none;
-    opacity: 0;
-}
-
-.fold-shadow {
-    position: absolute;
-    top: 0;
-    width: 60px;
-    height: 100%;
-    z-index: 1;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.15), transparent);
-    pointer-events: none;
-    opacity: 0;
 }
 
 .back-title {
