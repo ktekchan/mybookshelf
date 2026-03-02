@@ -135,7 +135,8 @@ main {
 
 .overlay-card {
     width: 90vw;
-    max-width: 400px;
+    max-width: 600px;
+    max-height: 90vh;
     position: relative;
     overflow: hidden;
     background: #fff;
@@ -147,6 +148,14 @@ main {
     z-index: 2;
     background: #fff;
     padding: 10px;
+    max-height: 90vh;
+    overflow: hidden;
+}
+
+.page-front img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
 }
 
 .page-back {

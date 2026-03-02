@@ -97,8 +97,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const eased = easeInOut(rawProgress);
       const progress = direction === "open" ? eased : 1 - eased;
 
-      const topX = Math.max(0, Math.min(100, 100 - progress * 110));
-      const bottomX = Math.max(0, Math.min(100, 100 - progress * 90));
+      const topX = Math.max(0, Math.min(100, 100 - progress * 103));
+      const bottomX = Math.max(0, Math.min(100, 100 - progress * 97));
       front.style.clipPath =
         `polygon(0 0, ${topX}% 0, ${bottomX}% 100%, 0 100%)`;
 
